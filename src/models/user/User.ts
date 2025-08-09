@@ -9,6 +9,9 @@ export interface IUser extends Document {
   updatedAt: Date;
   isAcceptingMessages?: boolean;
   messages: [IMessage["_id"] | mongoose.Types.ObjectId];
+  verificationCode?: string;
+  verificationCodeExpires?: Date;
+  isVerified?: boolean;
 }
 
 const userSchema: Schema<IUser> = new Schema<IUser>(
@@ -44,6 +47,10 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
     isAcceptingMessages: {
       type: Boolean,
       default: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {
