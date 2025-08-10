@@ -17,10 +17,10 @@ export const signUpSchema = z.object({
     .max(50, "Email must not exceed 50 characters"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters long")
+    .min(4, "Password must be at least 4 characters long")
     .max(50, "Password must not exceed 50 characters"),
-  confirmPassword: z
-    .string()
-    .min(8, "Confirm Password must be at least 8 characters long")
-    .max(50, "Confirm Password must not exceed 50 characters"),
+  // confirmPassword: z
+  //   .string()
+  //   .min(4, "Confirm Password must be at least 4 characters long")
+  //   .max(50, "Confirm Password must not exceed 50 characters"),
 });

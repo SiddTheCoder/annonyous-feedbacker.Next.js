@@ -4,7 +4,7 @@ import { success, z } from "zod";
 import { userNameValidation } from "@/schemas/signUpSchema";
 
 const usernameQuerySchema = z.object({
-  username: userNameValidation
+  username: userNameValidation,
 });
 
 export async function GET(request: Request) {
@@ -15,26 +15,32 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const queryParam = {
-      username: searchParams.get("username")
+      username: searchParams.get("username"),
     };
 
     //validation with zod
-    const validationResult = usernameQuerySchema.safeParse(queryParam)
-    console.log("Validation Result", validationResult)
-    
-    if (!validationResult.success) {
-      const usernameErrorArray = validationResult.error.format().username?._errors || []
-      return Response.json({
-        success: false,
-        messsage: usernameErrorArray.length > 0 ? usernameErrorArray.join(', ') : 'Username format mismatch'
-      },{status: 400})
-    }
+    const validationResult = usernameQuerySchema.safeParse(queryParam);
 
+    if (!validationResult.success) {
+      const usernameErrorArray =
+        validationResult.error.format().username?._errors || [];
+      return Response.json(
+        {
+          success: false,
+          message:
+            usernameErrorArray.length > 0
+              ? usernameErrorArray.join(", ")
+              : "Username format mismatch",
+        },
+        { status: 400 }
+      );
+    }
     const { username } = validationResult.data;
 
-    const existingVerifiedUser = await User.findOne({ username, isVerified: true });
-
-    
+    const existingVerifiedUser = await User.findOne({
+      username,
+      isVerified: true,
+    });
 
     if (existingVerifiedUser) {
       let createdMessage = "";
@@ -50,10 +56,13 @@ export async function GET(request: Request) {
 
         createdMessage = `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
       }
-      return Response.json({
-        success: false,
-        message: 'Username is already taken ' + createdMessage
-      }, { status: 409 });
+      return Response.json(
+        {
+          success: false,
+          message: "Username is already taken " + createdMessage,
+        },
+        { status: 409 }
+      );
     }
 
     return Response.json(
@@ -63,9 +72,14 @@ export async function GET(request: Request) {
       },
       { status: 200 }
     );
-
   } catch (error) {
     console.error("Error in GET /check-username-unique:", error);
-    return new Response("Internal Server Error", { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: "Internal Server Error",
+      },
+      { status: 500 }
+    );
   }
 }

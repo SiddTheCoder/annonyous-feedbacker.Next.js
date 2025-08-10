@@ -22,6 +22,7 @@ export async function GET() {
       maxTokens: 150,
     });
 
+
     const rawContent = completion.choices[0]?.message?.content ?? "";
 
     // Normalize to string
