@@ -9,6 +9,7 @@ export interface IUser extends Document {
   updatedAt: Date;
   isAcceptingMessages?: boolean;
   messages: [IMessage["_id"] | mongoose.Types.ObjectId];
+  sentMessages: [IMessage["_id"] | mongoose.Types.ObjectId];
   verificationCode?: string;
   verificationCodeExpires?: Date;
   isVerified?: boolean;
@@ -31,6 +32,12 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       required: true,
     },
     messages: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
+    sentMessages: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message",
