@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
 
   // 2️⃣ If NOT logged in & visiting dashboard → go to sign-in
   if (!token && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   // 3️⃣ Allow public pages without redirect
