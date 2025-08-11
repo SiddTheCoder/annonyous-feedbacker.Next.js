@@ -2,12 +2,13 @@ import User from "@/models/user/User";
 import dbConnect from "@/lib/dbConnect";
 
 export async function POST(request: Request) {
-  const { email, code } = await request.json();
+  const { username, code } = await request.json();
 
+  console.log("cpde", code);
   try {
     await dbConnect();
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
 
     if (!user) {
       return new Response("User not found", { status: 404 });
@@ -17,6 +18,10 @@ export async function POST(request: Request) {
     const isCodeNotExpired = user.verificationCodeExpires
       ? new Date(user.verificationCodeExpires) > new Date()
       : false;
+
+    let a = new Date();
+
+    console.log("Expiry date", a);
 
     if (!isCodeValid) {
       return new Response("Invalid verification code", { status: 400 });

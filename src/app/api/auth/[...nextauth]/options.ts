@@ -1,4 +1,6 @@
 import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
 import dbConnect from "@/lib/dbConnect";
@@ -7,6 +9,14 @@ import User from "@/models/user/User";
 
 export const authOptions: NextAuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
     CredentialsProvider({
       id: "credentials",
       name: "Credentials",
@@ -23,15 +33,17 @@ export const authOptions: NextAuthOptions = {
         const user = await User.findOne({
           $or: [
             // username or email can only be accessed via credentials indentifier ( cannot access directly via identifier)
-            { username: credentials.identifier.email },
-            { email: credentials.identifier.email },
+            { username: credentials.identifier },
+            { email: credentials.identifier },
           ],
         });
         if (!user) {
           throw new Error("No user found with the provided credentials");
         }
         if (!user.isVerified) {
-          throw new Error("User email is not verified yet !, Please verify your email");
+          throw new Error(
+            "User email is not verified yet !, Please verify your email"
+          );
         }
         if (
           user &&
@@ -52,7 +64,7 @@ export const authOptions: NextAuthOptions = {
         token._id = user._id;
         token.email = user.email;
         token.isAcceptingMessages = user.isAcceptingMessages;
-        token.isVerified = user.isVerified;
+        token.isVerified = user.isVerified ?? true; // Social logins usually verified
         token.username = user.username;
       }
       return token;
@@ -77,4 +89,3 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
-

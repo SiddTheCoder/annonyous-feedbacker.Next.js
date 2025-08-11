@@ -96,7 +96,7 @@ export async function POST(request: Request) {
     };
 
     return NextResponse.json(
-      { message: "User created successfully", user: safeData },
+      { message: "OTP Sent to your email ! Please Verify", user: safeData },
       { status: 201 }
     );
   } catch (error) {

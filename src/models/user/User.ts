@@ -59,6 +59,14 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    verificationCode: {
+      type: String,
+      default: null,
+    },
+    verificationCodeExpires: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,

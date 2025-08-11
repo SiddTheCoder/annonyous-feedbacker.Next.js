@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Form } from "@/components/ui/form";
 import * as z from "zod";
 import Link from "next/link";
 import { useDebounceCallback } from "usehooks-ts";
@@ -12,6 +11,7 @@ import { signUpSchema } from "@/schemas/signUpSchema";
 import axios from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 import {
+  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -84,12 +84,8 @@ function page() {
     try {
       const response = await axios.post<ApiResponse>("/api/sign-up", data);
       console.log("Response from API:", response.data);
-      if (response.data.success) {
-        toast.success("Sign up successful!");
-        router.push(`/verify/${data.username}`);
-      } else {
-        toast.error(response.data.message);
-      }
+        toast.success(response.data.message);
+        router.replace(`/verify/${data.username}`);
     } catch (error) {
       console.error("Error signing up:", error);
       toast.error("Error signing up");
