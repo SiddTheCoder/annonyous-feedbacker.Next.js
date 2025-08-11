@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import User from "@/models/user/User";
 import { sendVerificationEmail } from "@/helper/sendVerifcationEmail";
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbconfig/dbConnect";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-
 
 export async function POST(request: Request) {
   await dbConnect();

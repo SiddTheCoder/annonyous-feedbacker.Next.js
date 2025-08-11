@@ -1,4 +1,4 @@
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbconfig/dbConnect";
 import User, { IUser } from "@/models/user/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
@@ -54,7 +54,6 @@ export async function POST(request: Request) {
   }
 }
 
-
 export async function GET(request: Request) {
   await dbConnect();
 
@@ -65,7 +64,8 @@ export async function GET(request: Request) {
     return Response.json(
       {
         error: "Unauthorized",
-        message: "You must be logged in to retrieve your message acceptance status.",
+        message:
+          "You must be logged in to retrieve your message acceptance status.",
       },
       { status: 401 }
     );
@@ -98,7 +98,8 @@ export async function GET(request: Request) {
     return Response.json(
       {
         error: "Internal Server Error",
-        message: "An error occurred while retrieving the message acceptance status.",
+        message:
+          "An error occurred while retrieving the message acceptance status.",
       },
       { status: 500 }
     );

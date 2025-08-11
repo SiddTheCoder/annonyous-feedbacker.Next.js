@@ -22,6 +22,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
+
 
 function page() {
   const router = useRouter();
@@ -181,6 +183,20 @@ function page() {
             </Button>
           </form>
         </Form>
+        <div className="flex flex-col gap-2 mt-4">
+          <Button
+            variant="outline"
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          >
+             Continue with Google
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => signIn("github", { callbackUrl: "/dashboard" })}
+          >
+            Continue with GitHub
+          </Button>
+        </div>
         <div className="mt-4">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}

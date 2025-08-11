@@ -3,9 +3,12 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions } from "next-auth";
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbconfig/dbConnect";
+import { Types } from "mongoose";
+
 import bcrypt from "bcryptjs";
 import User from "@/models/user/User";
+import { IUser } from "@/models/user/User";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -47,6 +50,7 @@ export const authOptions: NextAuthOptions = {
         }
         if (
           user &&
+          user.password &&
           // password can be accessed directly via credentials ( no needed to access via identifier)
           (await bcrypt.compare(credentials.password, user.password))
         ) {
@@ -59,6 +63,35 @@ export const authOptions: NextAuthOptions = {
   ],
   // Add any additional NextAuth options here
   callbacks: {
+    async signIn({ user, account }) {
+      if (!account) return false;
+      await dbConnect();
+
+      if (account?.provider !== "credentials") {
+        let existingUser = await User.findOne({ email: user.email });
+
+        if (!existingUser) {
+          existingUser = await User.create({
+            email: user.email,
+            username: user.name?.replace(/\s+/g, "").toLowerCase(),
+            isVerified: true,
+            isAcceptingMessages: true,
+            provider: account.provider,
+            password: null, // No password for social logins
+          });
+        }
+
+        // Attach DB user data to `user` object for jwt callback
+        const exUser = existingUser as IUser & { _id: Types.ObjectId };
+        user._id = exUser._id.toString();
+        user.username = exUser.username;
+        user.isVerified = exUser.isVerified;
+        user.isAcceptingMessages = exUser.isAcceptingMessages;
+      }
+
+      return true; // allow login
+    },
+
     async jwt({ token, user }) {
       if (user) {
         token._id = user._id;

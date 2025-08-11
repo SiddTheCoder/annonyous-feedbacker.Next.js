@@ -4,7 +4,7 @@ import { IMessage } from "../messages/Message";
 export interface IUser extends Document {
   username: string;
   email: string;
-  password: string;
+  password?: string;
   createdAt: Date;
   updatedAt: Date;
   isAcceptingMessages?: boolean;
@@ -13,6 +13,7 @@ export interface IUser extends Document {
   verificationCode?: string;
   verificationCodeExpires?: Date;
   isVerified?: boolean;
+  provider?: string;
 }
 
 const userSchema: Schema<IUser> = new Schema<IUser>(
@@ -29,7 +30,6 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
     },
     password: {
       type: String,
-      required: true,
     },
     messages: [
       {
@@ -66,6 +66,10 @@ const userSchema: Schema<IUser> = new Schema<IUser>(
     verificationCodeExpires: {
       type: Date,
       default: Date.now,
+    },
+    provider: {
+      type: String,
+      default: "Credentials",
     },
   },
   {

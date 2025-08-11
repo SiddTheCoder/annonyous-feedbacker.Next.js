@@ -1,4 +1,4 @@
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbconfig/dbConnect";
 import Message from "@/models/messages/Message";
 import User, { IUser } from "@/models/user/User";
 import { getServerSession } from "next-auth";
@@ -23,7 +23,7 @@ export async function GET(request: Request) {
   try {
     const userId = new mongoose.Types.ObjectId(user._id);
     const userWithMessages = await User.findById(userId).populate("messages");
-  
+
     return Response.json(
       {
         message: "User messages retrieved successfully.",

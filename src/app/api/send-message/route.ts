@@ -1,4 +1,4 @@
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbconfig/dbConnect";
 import Message from "@/models/messages/Message";
 import User, { IUser } from "@/models/user/User";
 import { getServerSession } from "next-auth";

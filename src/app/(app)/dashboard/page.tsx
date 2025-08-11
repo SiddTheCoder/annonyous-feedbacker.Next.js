@@ -17,7 +17,7 @@ function Page() {
   console.log("User:", session.user);
 
   return (
-    <div>Dashboard - Welcome {session.user?.name || session.user?.email}</div>
+    <div>Dashboard - Welcome {session.user?.name || session.user?.username}</div>
   );
 }
 

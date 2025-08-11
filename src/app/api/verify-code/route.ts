@@ -1,5 +1,5 @@
 import User from "@/models/user/User";
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbconfig/dbConnect";
 
 export async function POST(request: Request) {
   const { username, code } = await request.json();

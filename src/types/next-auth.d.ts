@@ -1,12 +1,12 @@
-import NextAuth from "next-auth";
+import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
-  interface User{
+  interface User {
     _id?: string;
-      username?: string;
-      email?: string;
-      isAcceptingMessages?: boolean;
-      isVerified?: boolean;
+    username?: string;
+    email?: string;
+    isAcceptingMessages?: boolean;
+    isVerified?: boolean;
   }
   interface Session {
     user: {
@@ -28,5 +28,12 @@ declare module "next-auth/jwt" {
     isVerified?: boolean;
     username?: string;
     image?: string;
+  }
+}
+
+// Extra: override the signIn callback param
+declare module "next-auth" {
+  interface CallbacksOptions {
+    signIn?: (params: { user: User; account: any }) => any;
   }
 }

@@ -1,20 +1,17 @@
 import { NextResponse } from "next/server";
 import User from "@/models/user/User";
 import { sendVerificationEmail } from "@/helper/sendVerifcationEmail";
-import dbConnect from "@/lib/dbConnect";
+import dbConnect from "@/lib/dbconfig/dbConnect";
 import crypto from "crypto";
 
-export async function POST(request:Request) {
+export async function POST(request: Request) {
   await dbConnect();
-  const {  username } = await request.json();
+  const { username } = await request.json();
 
   const user = await User.findOne({ username });
 
   if (!user) {
-    return NextResponse.json(
-      { error: "User not found" },
-      { status: 404 }
-    );
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
   // Generate a new verification code
@@ -26,7 +23,10 @@ export async function POST(request:Request) {
   await sendVerificationEmail(user.email, newVerificationCode, user.username);
 
   return NextResponse.json(
-    { message: "Verification email resent", user: { username: user.username, email: user.email } },
+    {
+      message: "Verification email resent",
+      user: { username: user.username, email: user.email },
+    },
     { status: 200 }
   );
 }
