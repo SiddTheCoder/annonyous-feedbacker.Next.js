@@ -1,16 +1,10 @@
 "use client";
 import React from "react";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import { Button } from "../ui/button";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import MessageCard from "@/components/localcomponents/MessageCard";
+import AlertDialogComponent from "./AlertDialogComponent";
 
 function Header() {
   const router = useRouter();
@@ -31,11 +25,18 @@ function Header() {
       )}
       {user && (
         <Button
-          onClick={() => signOut({ callbackUrl: "/" })}
           className="bg-slate-950 hover:bg-slate-800 text-white hover:text-white"
           variant="outline"
         >
-          Sign Out
+          <AlertDialogComponent
+            cardTriggeringName="Sign-Out"
+            title="Sign Out"
+            description="Are you sure you want to sign out?"
+            onClose={() => {}}
+            onConfirm={async () => {
+              await signOut({ callbackUrl: "/" });
+            }}
+          />
         </Button>
       )}
     </div>

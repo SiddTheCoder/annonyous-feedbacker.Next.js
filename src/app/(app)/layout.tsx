@@ -5,6 +5,7 @@ import AuthProvider from "@/context/AuthProvider";
 import ThemeProvider from "@/context/ThemeProvider";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/localcomponents/Header";
+import StateProvider from "@/redux/StateProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +33,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <div className="w-full">
-            <Header />
-          </div>
-          {children}
+          <StateProvider>
+            <div className="w-full">
+              <Header />
+            </div>
+            {children}
+          </StateProvider>
         </AuthProvider>
 
         <Toaster />

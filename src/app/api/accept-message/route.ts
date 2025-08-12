@@ -36,6 +36,7 @@ export async function POST(request: Request) {
         { status: 404 }
       );
     }
+    await foundUser.save();
 
     return Response.json({
       message: "Accepting messages toggled successfully.",
@@ -58,7 +59,7 @@ export async function GET(request: Request) {
   await dbConnect();
 
   const session = await getServerSession(authOptions);
-  const user: IUser = session?.user;
+  const user = session?.user;
 
   if (!user) {
     return Response.json(
